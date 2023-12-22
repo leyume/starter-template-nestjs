@@ -1,0 +1,39 @@
+version: "3"
+services:
+  codename_prod_api:
+    image: node:alpine3.17
+    volumes:
+      - ./api:/code
+    environment:
+      - NODE_ENV=development
+    working_dir: /code
+    command: sh -c "npm i && npm run build && npm run start:prod"
+    ports:
+      - 9223:8555
+    depends_on:
+      - codename_prod_db
+    links:
+      - codename_prod_db
+    container_name: codename_prod_api
+
+  codename_prod_db:
+    image: leyume/mariadb
+    volumes:
+      - "db/mysql:/var/lib/mysql:rw"
+      - "db/my.cnf:/etc/mysql/my.cnf"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+
+  codename_prod_adminer:
+    image: leyume/adminer:mysql
+    restart: always
+    ports:
+      - 9225:80
+    depends_on:
+      - codename_prod_db
+    links:
+      - codename_prod_db
