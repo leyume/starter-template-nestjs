@@ -19,8 +19,8 @@ services:
   codename_prod_db:
     image: leyume/mariadb
     volumes:
-      - "db/mysql:/var/lib/mysql:rw"
-      - "db/my.cnf:/etc/mysql/my.cnf"
+      - "./db/mysql:/var/lib/mysql:rw"
+      - "./db/my.cnf:/etc/mysql/my.cnf"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_PASSWORD}"
